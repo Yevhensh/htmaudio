@@ -1,26 +1,23 @@
 
+
 $(document).ready(function(){
+    //audio environment
     createContext();
+    //getting song's properties to front-end
     querySongs();
 });
 
-var playing = false;
-var musicPlayed = null;
-
-function resumePause(self) {
-    $(self).toggleClass('active');
-    if( $(self).attr("class").indexOf("active") !== -1 ){
-        playing = true;
-        musicPlayed = self;
-        countProg();
+var context;
+//init context
+function createContext() {
+    try {
+        window.AudioContext = window.AudioContext||window.webkitAudioContext;
+        context = new AudioContext();
     }
-    else {
-        musicPlayed = null;
-        playing = false;
+    catch(e) {
+        alert('Web Audio API is not supported in this browser');
     }
-    return false;
 }
-
 
 var querySongs = function(){
     $.ajax({
@@ -39,16 +36,15 @@ function parseSongs(data){
         var section = document.createElement('div');
         section.className = "song";
         var minSec = countMinutes(data[i].duration);
-        section.innerHTML = "<span class='songtitle'>" + data[i].artist[0] + "  " + data[i].title + "</span>" +
-            "<a href='#' title='Play video' onclick='resumePause(this)' class='play run'></a>" +
+        section.innerHTML = "<span class='songtitle'>" + data[i].artist[0] + " " + data[i].title + "</span>" +
+            "<a href='#' title='Play video' onclick='mainRun(this)' class='play run'></a>" +
            "<span class='songstart'>0:00</span>" +
-        "<input class='soundprog' type='range' name='points' value='0' min='0' max='"+data[i].duration+"' step='1'>" +
+        "<input class='soundprog' onchange='changeProg(this)' type='range' name='points' value='0' min='0' max='"+data[i].duration+"' step='1'>" +
             "<span class='songend'>" + minSec.min + ":" + minSec.sec + "</span>" +
         "<input class='volume vVertical' type='range' name='points' min='1' max='100' value='50' step='1'/>";
 
         $(".music").append(section);
     }
-    //var songs = data.parseJSON();
 }
 
 function countMinutes(sec) {
@@ -64,91 +60,122 @@ function countMinutes(sec) {
     return time;
 }
 
-var running = false;
-var self;
 
-$(function(){
-   $('#run').on('click', function(){
-       //query song prefs; self – current song
-       if($(this)!= self) {
-           self = this;
-           var songNum = $(this).val();
-           var songName = querySongPrefs(songNum);
-       }
-       if(running == false){
-           running = true;
-           play();
-       }
-       else {
-           running = false;
-           stop();
-       }
-   }
-   );
-   $('#volume').on('change', function(){
-       var vol = $(this).val();
-       gainValue = vol/100;
-       gainNode.gain.value = gainValue;
-       source.connect(gainNode);
-   });
-});
+var playing = false;
+
+var start = 0;
+var end = 0;
+var time = 0;
+//contains this val of cur song
+var song = null;
 
 
+function mainRun(self) {
+    $(self).toggleClass('active');
 
-var gainNode;
-var gainValue = 0.5;
-var context;
-//3 main components
-var buffer, source, destination;
+    //music run
+    if( $(self).attr("class").indexOf("active") !== -1 ){
+        //if new song run
+        if(song != self){
+            song = self;
 
-//init context
-function createContext() {
-    try {
-        window.AudioContext = window.AudioContext||window.webkitAudioContext;
-        context = new AudioContext();
+            start = 0;
+            time = 0;
+            end = 0;
+
+            $(self).siblings(".soundprog").val(0);
+            $(self).siblings(".soundstart").val("0:00");
+            var soundName = $(self).siblings(".songtitle").text();
+            loadSoundFile(soundName + ".mp3");
+        }
+        if(start == 0){
+            play(null, self);
+            time = 0;
+        }
+        else {
+            play(time/1000, self);
+        }
+        start = new Date().getTime();
+        playing = true;
     }
-    catch(e) {
-        alert('Web Audio API is not supported in this browser');
+    //music stopped
+    else {
+        end = new Date().getTime();
+        if(time == 0) {
+            time = end - start;
+        }
+        else {
+            time = time + (end - start);
+        }
+        playing = false;
+        stop();
+    }
+    return false;
+}
+
+//getting current proggress of song
+function changeProg(self) {
+    // self – soundproggress
+    var prog = $(self).val();
+    var setTime = countMinutes(prog);
+    $(self).siblings(".songstart").text(setTime.min + ":" + setTime.sec );
+    time = prog;
+    if (playing){
+        play(time, self);
     }
 }
 
-var st;
-var end;
-var time = 0;
+//main components
+var buffer,
+    source,
+    destination,
+    gainNode; //volume
 
-// music start
-var play = function(){
+var gainValue = 0.5; //volume lvl
+
+//direct playing function
+var play = function(from, self){
     source = context.createBufferSource();
     // connect buffer to source
     source.buffer = buffer;
-    // дефолтный получатель звука
+    // connect default destination
     destination = context.destination;
     gainNode = context.createGain();
     gainNode.gain.value = gainValue;
     source.connect(gainNode);
     gainNode.connect(destination);
-    // подключаем источник к получателю
+    // connect destination to source
     source.connect(destination);
-    // програємо
-    if(time == 0) {
-        source.start(0);
-        st = new Date().getTime();
+    // play
+    if(from != null){
+        source.start(0, from);
     }
-    // після паузи
     else {
-        st = new Date().getTime();
-        st = st - time;
-        source.start(0, time/1000);
+        source.start(0);
     }
+    progtimer(self);
 };
 
-// функция остановки воспроизведения
 var stop = function(){
-    end = new Date().getTime();
-    time = end - st;
     source.stop(0);
 };
 
+function progtimer(self){
+    if(playing){
+        var v = $(self).siblings(".soundprog").val();
+        v++;
+        $(self).siblings(".soundprog").val(v);
+        var getMin = countMinutes(v);
+        $(self).siblings(".soundstart").text(getMin.min + ":" + getMin.sec);
+        setTimeout("progtimer(self)", 1000);
+    }
+    else {
+        return;
+    }
+}
+
+
+//getting sound file (query to server)
 var loadSoundFile = function(url) {
     // делаем XMLHttpRequest (AJAX) на сервер
     var xhr = new XMLHttpRequest();

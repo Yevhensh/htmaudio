@@ -35,6 +35,17 @@ app.use(function(req, res, next){
     }
 });
 
+app.use(function(req, res, next){
+    //song file query
+    if(req.url.toString().indexOf(".mp3") !== -1){
+        var r = req.url;
+        r = r.replace(/%20/g, " ");
+        sendFile("music" + r, res);
+    }
+    else {
+        next();
+    }
+});
 
 app.use(function(req, res, next){
     if(req.url){
