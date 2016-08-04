@@ -1,15 +1,29 @@
 body {
     @import url(https://fonts.googleapis.com/css?family=Cuprum:400,700,400italic&subset=latin,cyrillic);
-    font-family: 'Cuprum', sans-serif;
+    font-family: sans-serif;
     font-size: 16px;
     max-width: 100%;
 }
 
 .music {
-    height: 100vh;
+    height: 750px;
     background-color: #F7F7F7;
     margin-top: 40px;
     width: 100%
+}
+
+.music{
+    margin-top: 20px;
+}
+
+h1 {
+    font-size: 40px;
+    font-family: Georgia;
+    margin-bottom: 30px;
+}
+
+.indent {
+    height: 18px;
 }
 
 .song {
@@ -42,6 +56,14 @@ body {
         -ms-transform: scale(0.7, 0.7); /* IE 9 */
         -webkit-transform: scale(0.7, 0.7); /* Safari */
         transform: scale(0.7, 0.7);
+    }
+}
+
+
+@media only screen and (min-width: 1300px) {
+    .song {
+        margin-left: 25%;
+
     }
 }
 

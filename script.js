@@ -32,15 +32,24 @@ var querySongs = function(){
 
 function parseSongs(data){
     console.log(data);
+
     for(var i = 0; i<data.length; i++){
+
         var section = document.createElement('div');
         section.className = "song";
         var minSec = countMinutes(data[i].duration);
+        var parsedSecs;
+        if(minSec.sec < 10){
+            parsedSecs = "0" + minSec.sec;
+        }
+        else {
+            parsedSecs = minSec.sec;
+        }
         section.innerHTML = "<span class='songtitle'>" + data[i].artist[0] + " - " + data[i].title + "</span>" +
             "<a href='#' title='Play video' onclick='mainRun(this)' class='play run'></a>" +
            "<span class='songstart'>0:00</span>" +
         "<input class='soundprog' onclick='changeProg(this)' type='range' name='points' value='0' min='0' max='"+data[i].duration+"' step='1'>" +
-            "<span class='songend'>" + minSec.min + ":" + minSec.sec + "</span>" +
+            "<span class='songend'>" + minSec.min + ":" + parsedSecs + "</span>" +
         "<input class='volume vVertical' onchange='changeVolume(this)' type='range' name='points' min='1' max='100' value='50' step='1'/>";
 
         $(".music").append(section);
@@ -92,13 +101,14 @@ function mainRun(self) {
             $(song).siblings(".volume").val(50);
             $(self).siblings(".songstart").text("0:00");
             var soundName = $(self).siblings(".songtitle").text();
+            console.log(soundName);
             loadSoundFile(soundName + ".mp3");
         }
         //delay for updating song
         setTimeout(function(){
             play();
             playing = true;
-        }, 1000);
+        }, 1500);
     }
     //music stopped
     else {
