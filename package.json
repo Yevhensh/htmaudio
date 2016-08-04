@@ -7,5 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "yevhensh <Yevhen.Shabala@gmail.com> (http://github.com/Yevhensh)",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "bower": "^1.7.9",
+    "express": "^4.14.0"
+  }
 }

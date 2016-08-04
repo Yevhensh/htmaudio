@@ -1,0 +1,210 @@
+
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.music {
+    margin: 40px;
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
+.song {
+    height: 70px;
+}
+
+.songtitle {
+    margin-left: 150px;
+    margin-top: 20px;
+    display: inline-block;
+    position: absolute;
+}
+
+.songstart {
+    margin-top: 50px;
+    margin-left: 14px;
+    position: absolute;
+    display: inline-block;
+}
+
+.songend {
+    display: inline-block;
+    margin-left: 500px;
+    margin-top: 50px;
+    position: absolute;
+}
+
+.play {
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border-top: 50px solid transparent;
+    border-bottom: 50px solid transparent;
+    border-left: 60px solid #2c3e50;
+    margin: 100px auto 50px auto;
+    z-index: 1;
+    transition: all 0.3s;
+    -webkit-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    left: 10px;
+}
+.play:before {
+    content: '';
+    position: absolute;
+    top: -75px;
+    left: -115px;
+    bottom: -75px;
+    right: -35px;
+    border-radius: 50%;
+    border: 10px solid #2c3e50;
+    z-index: 2;
+    transition: all 0.3s;
+    -webkit-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+}
+.play:after {
+    content: '';
+    opacity: 0;
+    transition: opacity 0.6s;
+    -webkit-transition: opacity 0.6s;
+    -moz-transition: opacity 0.6s;
+}
+.play:hover:before, .play:focus:before {
+    transform: scale(1.1);
+    -webkit-transform: scale(1.1);
+    -moz-transform: scale(1.1);
+}
+.play.active {
+    border-color: transparent;
+}
+.play.active:after {
+    content: '';
+    opacity: 1;
+    width: 70px;
+    height: 80px;
+    background: #2c3e50;
+    position: absolute;
+    right: 6px;
+    top: -40px;
+    border-left: 20px solid #2c3e50;
+    box-shadow: inset 30px 0 0 0 #f9f9f9;
+}
+
+.run {
+    margin-top: 10px;
+    margin-left: 10px;
+    -ms-transform: scale(0.3, 0.3); /* IE 9 */
+    -webkit-transform: scale(0.3, 0.3); /* Safari */
+    transform: scale(0.3, 0.3);
+    display: inline-block;
+}
+
+/*styling song proggress*/
+input[type=range] {
+    display: inline-block;
+    position: absolute;
+    margin-top: 55px;
+    margin-left: 75px;
+    /*removes default webkit styles*/
+    -webkit-appearance: none;
+
+    /*fix for FF unable to apply focus style bug */
+    border: 1px solid white;
+
+    /*required for proper track sizing in FF*/
+    width: 400px;
+}
+input[type=range]::-webkit-slider-runnable-track {
+    width: 400px;
+    height: 7px;
+    background: #ddd;
+    border: none;
+    border-radius: 3px;
+}
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    border: none;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: goldenrod;
+    margin-top: -4px;
+}
+input[type=range]:focus {
+    outline: none;
+}
+input[type=range]:focus::-webkit-slider-runnable-track {
+    background: #ccc;
+}
+
+input[type=range]::-moz-range-track {
+    width: 400px;
+    height: 7px;
+    background: #ddd;
+    border: none;
+    border-radius: 3px;
+}
+input[type=range]::-moz-range-thumb {
+    border: none;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: goldenrod;
+}
+
+/*hide the outline behind the border*/
+input[type=range]:-moz-focusring{
+    outline: 1px solid white;
+    outline-offset: -1px;
+}
+
+input[type=range]::-ms-track {
+    width: 400px;
+    height: 7px;
+
+    /*remove bg colour from the track, we'll use ms-fill-lower and ms-fill-upper instead */
+    background: transparent;
+
+    /*leave room for the larger thumb to overflow with a transparent border */
+    border-color: transparent;
+    border-width: 6px 0;
+
+    /*remove default tick marks*/
+    color: transparent;
+}
+input[type=range]::-ms-fill-lower {
+    background: #777;
+    border-radius: 10px;
+}
+input[type=range]::-ms-fill-upper {
+    background: #ddd;
+    border-radius: 10px;
+}
+input[type=range]::-ms-thumb {
+    border: none;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: goldenrod;
+}
+input[type=range]:focus::-ms-fill-lower {
+    background: #888;
+}
+input[type=range]:focus::-ms-fill-upper {
+    background: #ccc;
+}
+
+/*styling volume lvl*/
+input[type=range].vVertical {
+    -webkit-appearance: none;
+    width: 50px;
+    height:10px;
+    margin-left: 530px;
+    -webkit-transform:rotate(90deg);
+    -moz-transform:rotate(90deg);
+    -o-transform:rotate(90deg);
+    -ms-transform:rotate(90deg);
+    transform:rotate(90deg);
+    z-index: 0;
+}
