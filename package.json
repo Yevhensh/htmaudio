@@ -10,6 +10,7 @@
   "license": "ISC",
   "devDependencies": {
     "bower": "^1.7.9",
-    "express": "^4.14.0"
+    "express": "^4.14.0",
+    "musicmetadata": "^2.0.4"
   }
 }
