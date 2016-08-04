@@ -89,7 +89,10 @@ function mainRun(self) {
             loadSoundFile(soundName + ".mp3");
         }
         if(start == 0){
-            play(null, self);
+            setTimeout(function(){
+                play(null, self);
+            }, 1000);
+
             time = 0;
         }
         else {
@@ -105,7 +108,7 @@ function mainRun(self) {
             time = end - start;
         }
         else {
-            time = time + (end - start);
+            time = time + ((end - start)/1000);
         }
         playing = false;
         stop();
@@ -121,6 +124,7 @@ function changeProg(self) {
     $(self).siblings(".songstart").text(setTime.min + ":" + setTime.sec );
     time = prog;
     if (playing){
+        stop();
         play(time, self);
     }
 }
