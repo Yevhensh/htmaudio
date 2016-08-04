@@ -39,7 +39,7 @@ function parseSongs(data){
         section.innerHTML = "<span class='songtitle'>" + data[i].artist[0] + " " + data[i].title + "</span>" +
             "<a href='#' title='Play video' onclick='mainRun(this)' class='play run'></a>" +
            "<span class='songstart'>0:00</span>" +
-        "<input class='soundprog' onchange='changeProg(this)' type='range' name='points' value='0' min='0' max='"+data[i].duration+"' step='1'>" +
+        "<input class='soundprog' onclick='changeProg(this)' type='range' name='points' value='0' min='0' max='"+data[i].duration+"' step='1'>" +
             "<span class='songend'>" + minSec.min + ":" + minSec.sec + "</span>" +
         "<input class='volume vVertical' type='range' name='points' min='1' max='100' value='50' step='1'/>";
 
@@ -78,11 +78,9 @@ function mainRun(self) {
         //if new song run
         if(song != self){
             song = self;
-
             start = 0;
             time = 0;
             end = 0;
-
             $(self).siblings(".soundprog").val(0);
             $(self).siblings(".soundstart").val("0:00");
             var soundName = $(self).siblings(".songtitle").text();
@@ -90,14 +88,15 @@ function mainRun(self) {
         }
         if(start == 0){
             setTimeout(function(){
-                play(null, self);
+                play(null);
             }, 1000);
 
             time = 0;
         }
         else {
-            play(time/1000, self);
+            play(time/1000);
         }
+
         start = new Date().getTime();
         playing = true;
     }
@@ -117,15 +116,19 @@ function mainRun(self) {
 }
 
 //getting current proggress of song
-function changeProg(self) {
+function changeProg() {
     // self – soundproggress
-    var prog = $(self).val();
-    var setTime = countMinutes(prog);
-    $(self).siblings(".songstart").text(setTime.min + ":" + setTime.sec );
+    var prog = $(song).siblings(".soundprog").val();
+var setTime = countMinutes(prog);
+    $(song).siblings(".songstart").text(setTime.min + ":" + setTime.sec );
     time = prog;
     if (playing){
         stop();
-        play(time, self);
+        playing = false;
+        setTimeout(function(){
+            play(time);
+            playing = true;
+        }, 200);
     }
 }
 
@@ -138,7 +141,7 @@ var buffer,
 var gainValue = 0.5; //volume lvl
 
 //direct playing function
-var play = function(from, self){
+var play = function(from){
     source = context.createBufferSource();
     // connect buffer to source
     source.buffer = buffer;
@@ -157,21 +160,21 @@ var play = function(from, self){
     else {
         source.start(0);
     }
-    progtimer(self);
+    progtimer();
 };
 
 var stop = function(){
     source.stop(0);
 };
 
-function progtimer(self){
+function progtimer(){
     if(playing){
-        var v = $(self).siblings(".soundprog").val();
+        var v = $(song).siblings(".soundprog").val();
         v++;
-        $(self).siblings(".soundprog").val(v);
+        $(song).siblings(".soundprog").val(v);
         var getMin = countMinutes(v);
-        $(self).siblings(".soundstart").text(getMin.min + ":" + getMin.sec);
-        setTimeout("progtimer(self)", 1000);
+        $(song).siblings(".songstart").text(getMin.min + ":" + getMin.sec);
+        setTimeout("progtimer()", 1000);
     }
     else {
         return;
