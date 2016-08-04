@@ -7,3 +7,4 @@ In order to run this project you need :
 3. npm install
 4. bower install
 5. run localhost:3000
+6. node server.js
