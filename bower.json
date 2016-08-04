@@ -1,0 +1,21 @@
+{
+  "name": "audioplayer",
+  "description": "",
+  "main": "script.js",
+  "authors": [
+    "yevhensh <Yevhen.Shabala@gmail.com> (http://github.com/Yevhensh)"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/Yevhensh/htmaudio",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "^3.3.7",
+    "jquery": "^3.1.0"
+  }
+}
