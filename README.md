@@ -8,3 +8,5 @@ In order to run this project you need :
 4. bower install
 5. node server.js
 6. run localhost:3000
+
+To add new song to music folder you need to name it like + " 'Performer' - 'Name of song' "
