@@ -24,6 +24,7 @@ app.use(function(req, res, next){
     }
 });
 
+//getting song props
 app.use(function(req, res, next){
     if(req.url == '/songs') {
         var songs = songquery.music;
@@ -35,6 +36,7 @@ app.use(function(req, res, next){
     }
 });
 
+//sending .mp3 file to front
 app.use(function(req, res, next){
     //song file query
     if(req.url.toString().indexOf(".mp3") !== -1){
@@ -55,15 +57,6 @@ app.use(function(req, res, next){
         res.status(404).send("Page Not Found");
     }
 });
-
-//app.use(function(req, res, next){
-//    if(req.url == ''){
-//        sendFile('/BONES.mp3', res);
-//    }
-//    else {
-//        next();
-//    }
-//});
 
 function sendFile(fileName, res) {
     var fileStream = fs.createReadStream(fileName);
