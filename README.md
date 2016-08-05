@@ -1,5 +1,5 @@
 # htmaudio
-Its WEB audio player based on Node js and jQuery
+Its WEB audio player based on Node js, jQuery and HTML audio API
 In order to run this project you need : 
 
 1. Download this project
