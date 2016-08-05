@@ -1,5 +1,5 @@
 
-
+//init functions
 $(document).ready(function(){
     //audio environment
     createContext();
@@ -7,6 +7,7 @@ $(document).ready(function(){
     querySongs();
 });
 
+//main web audio elem
 var context;
 //init context
 function createContext() {
@@ -19,6 +20,7 @@ function createContext() {
     }
 }
 
+//bring song properties to front
 var querySongs = function(){
     $.ajax({
        method: "GET",
@@ -30,6 +32,8 @@ var querySongs = function(){
     });
 };
 
+
+//appending song props to front
 function parseSongs(data){
     console.log(data);
 
@@ -71,13 +75,14 @@ function countMinutes(sec) {
 }
 
 
+//get song running or not
 var playing = false;
 
 
 //contains this val of cur song
 var song = null;
 
-
+//after play click
 function mainRun(self) {
     $(self).toggleClass('active');
 
@@ -120,7 +125,7 @@ function mainRun(self) {
 
 //getting current proggress of song
 function changeProg() {
-    // self – soundproggress
+
     var prog = $(song).siblings(".soundprog").val();
     var setTime = countMinutes(prog);
     $(song).siblings(".songstart").text(setTime.min + ":" + setTime.sec);
@@ -216,15 +221,15 @@ function changeVolume(ob) {
 
 //getting sound file (query to server)
 var loadSoundFile = function(url) {
-    // делаем XMLHttpRequest (AJAX) на сервер
+    // making XMLHttpRequest (AJAX) on server
     var xhr = new XMLHttpRequest();
     xhr.open('GET', url, true);
-    xhr.responseType = 'arraybuffer'; // важно
+    xhr.responseType = 'arraybuffer'; // important
     xhr.onload = function(e) {
-        // декодируем бинарный ответ
+        //getting binary answer
         context.decodeAudioData(this.response,
             function(decodedArrayBuffer) {
-                // получаем декодированный буфер
+                // get decoded buffer
                 buffer = decodedArrayBuffer;
             }, function(e) {
                 console.log('Error decoding file', e);

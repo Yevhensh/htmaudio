@@ -2,6 +2,8 @@ var mm = require('musicmetadata');
 var fs = require('fs');
 var playlist;
 
+
+//direct function to read songs from file system
 function songs(){
     var songList = [];
     var responseArr = [];
